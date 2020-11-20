@@ -1,5 +1,5 @@
 #include <iostream>
-#include <queue>
+#include <vector>
 using namespace std;
 
 struct cliente
@@ -13,9 +13,10 @@ struct cliente
 void clientes();
 void ganancias();
 void despliegueDestinos();
+void verNums(int);
 
-queue <cliente> colaPasajeros; //declaracion de la queue de tipo Cliente
-queue <cliente> pasajerosDiscapacitados; //declaracion de la queue de tipo cliente para pasajeros con discapacidad
+vector <cliente> listaPasajeros; //declaracion de la queue de tipo Cliente
+vector <cliente> pasajerosDiscapacitados; //declaracion de la queue de tipo cliente para pasajeros con discapacidad
 
 
 int main()
@@ -34,9 +35,10 @@ int main()
         cout<<"               4. Salir. "<<endl;
         cout<<"Opcion: ";
         cin>>opt;
+        bool ver=true;
+        verNums(opt);
         cout<<"===================================================="<<endl;
-        
-        
+
         switch (opt)
         {
             case 1:
@@ -53,11 +55,12 @@ int main()
             break;
 
             default:
-                cout<<"Opcion no valida. Intente de nuevo.";
+                cout<<"Opcion no valida. Intente de nuevo."<<endl;
             break;
         }
         
     } while (stop);
+
     
 }
 
@@ -82,33 +85,48 @@ void clientes()
         getline(cin, unPasajero.nombre);
         cout<<"Ingrese la edad del pasajero "<<cont+1<<": "<<endl;
         cin>>unPasajero.edad;
-        cout<<"Tiene alguna discapacidad? (s/n): "<<endl;
-        cin>>unPasajero.discapacidad;
+        cout<<"Tiene alguna discapacidad? ";
+        bool opt2=true;
+        while(opt2) //validacion de dato
+        {
+            cout<<"(s/n): ";
+            cin>>unPasajero.discapacidad;
+
+            if (unPasajero.discapacidad!='n' && unPasajero.discapacidad!='s')
+            {
+                cout<<"Opcion invalida. Intentelo de nuevo"<<endl;
+            }
+            else 
+            {
+                opt2=false;
+            } 
+            
+        }
+
         cout<<"Destinos posibles: "<<endl;
         despliegueDestinos();
-        bool opt2=true;
-        while(opt2)
+        bool opt3=true;
+        while(opt3) //validacion de dato
         {
             cout<<"Elija su opcion: ";
             cin>>unPasajero.destino;
             if (unPasajero.destino>8)
             {
                 cout<<"Opcion no valida. Intentelo de nuevo. "<<endl;
-                opt2=true;
-            }else opt2=false;
-            
-            
+                opt3=true;
+            }else opt3=false;   
         }
         
         cout<<"Redirigiendo al sistema de registro de maletas..."<<endl;
         //ernesto's code.
         cin.ignore();
         
-        if (unPasajero.discapacidad=='s' || unPasajero.edad>65)
+        if (unPasajero.discapacidad=='s' || unPasajero.edad>65) //validacion de lista de pertenencia
         {
-            pasajerosDiscapacitados.push(unPasajero); //cola pasajeros discapacitados y adultos mayores
-        } else colaPasajeros.push(unPasajero); //cola pasajeros 
+            pasajerosDiscapacitados.push_back(unPasajero); //cola pasajeros discapacitados y adultos mayores
+        } else listaPasajeros.push_back(unPasajero); //cola pasajeros 
         cont++;
+
     }
     
 }
@@ -128,4 +146,19 @@ void despliegueDestinos(){
 
 void ganancias(){
     cout<<"ganancias."<<endl;
+}
+
+void verNums(int opt)
+{
+    bool ver=true;
+    while (ver)
+    {
+        if (cin.fail())
+        {
+            cout<<"Por favor, ingrese solo numeros. "<<endl;
+            cin.clear();
+            cin.ignore();
+        } else ver=false;
+    }
+
 }
